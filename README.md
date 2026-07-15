@@ -1,2 +1,2 @@
-# daijh.github.io
+# demo-dai.github.io
 my homepage
