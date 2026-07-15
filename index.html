@@ -1,101 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — AI Researcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF9;
+    --ink:#17181B;
+    --gray:#6B7280;
+    --line:#E4E4E7;
+    --accent:#3454D1;
+    --accent-soft:#EEF1FD;
+    --max:960px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', -apple-system, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
 
-<title>Dai Jinhang</title>
+  /* ---- nav ---- */
+  nav{
+    position:sticky; top:0; z-index:10;
+    background:rgba(250,250,249,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; justify-content:space-between; align-items:center;
+    height:56px;
+  }
+  .nav-name{font-family:'IBM Plex Mono'; font-size:13px; letter-spacing:0.02em;}
+  .nav-links{display:flex; gap:28px; font-size:14px;}
+  .nav-links a{color:var(--gray); transition:color .2s;}
+  .nav-links a:hover{color:var(--accent);}
 
-<link rel="stylesheet" href="assets/css/style.css">
+  /* ---- hero ---- */
+  header.hero{
+    padding:96px 0 72px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:center;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono'; font-size:12px; color:var(--accent);
+    letter-spacing:0.08em; text-transform:uppercase; margin-bottom:18px;
+    display:inline-block;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(38px, 6vw, 60px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  .hero p.role{
+    margin-top:16px; font-size:17px; color:var(--gray); max-width:46ch;
+  }
+  .hero-cta{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
+  .btn{
+    font-size:14px; font-weight:500; padding:10px 18px; border-radius:6px;
+    border:1px solid var(--line); transition:all .2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .btn.primary:hover{background:var(--accent); border-color:var(--accent);}
+  .btn.ghost:hover{border-color:var(--accent); color:var(--accent);}
 
+  /* signature: self-tracing vector path — echoes SVG/vectorization research */
+  .sig-wrap{position:relative; aspect-ratio:1/1;}
+  .sig-wrap svg{width:100%; height:100%;}
+  .sig-dot{fill:var(--gray); opacity:0.55;}
+  .sig-path{
+    fill:none; stroke:var(--accent); stroke-width:2;
+    stroke-dasharray:600; stroke-dashoffset:600;
+    animation:trace 2.4s ease-out forwards .3s;
+  }
+  @keyframes trace{ to{stroke-dashoffset:0;} }
+  @media (prefers-reduced-motion: reduce){ .sig-path{animation:none; stroke-dashoffset:0;} }
+
+  /* ---- section shell ---- */
+  section{padding:64px 0; border-top:1px solid var(--line);}
+  .kicker{
+    font-family:'IBM Plex Mono'; font-size:12px; color:var(--gray);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:28px;
+  }
+  h2{
+    font-family:'Fraunces', serif; font-weight:500; font-size:26px; margin-bottom:8px;
+  }
+
+  /* ---- about ---- */
+  .about-text{max-width:64ch; font-size:15.5px; color:#33363B;}
+
+  /* ---- research tags ---- */
+  .tag-list{display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;}
+  .tag{
+    font-family:'IBM Plex Mono'; font-size:12.5px;
+    padding:7px 12px; border:1px solid var(--line); border-radius:5px;
+    color:var(--ink); background:#fff;
+  }
+
+  /* ---- projects ---- */
+  .proj-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); margin-top:8px;
+  }
+  .proj-card{
+    background:var(--bg); padding:26px; transition:background .2s;
+  }
+  .proj-card:hover{background:var(--accent-soft);}
+  .proj-card .p-tag{
+    font-family:'IBM Plex Mono'; font-size:11px; color:var(--accent); margin-bottom:10px; display:block;
+  }
+  .proj-card h3{font-size:16.5px; font-weight:600; margin-bottom:8px;}
+  .proj-card p{font-size:13.5px; color:var(--gray);}
+  .proj-links{margin-top:14px; display:flex; gap:16px; font-size:12.5px;}
+  .proj-links a{color:var(--ink); border-bottom:1px solid var(--line);}
+  .proj-links a:hover{color:var(--accent); border-color:var(--accent);}
+
+  /* ---- publications ---- */
+  .pub{
+    padding:16px 0; border-bottom:1px solid var(--line);
+    display:grid; grid-template-columns:64px 1fr; gap:16px;
+  }
+  .pub:last-child{border-bottom:none;}
+  .pub-year{font-family:'IBM Plex Mono'; font-size:13px; color:var(--gray);}
+  .pub-title{font-size:15px; font-weight:500;}
+  .pub-meta{font-size:13px; color:var(--gray); margin-top:4px;}
+
+  /* ---- contact / footer ---- */
+  footer{padding:56px 0 64px; border-top:1px solid var(--line);}
+  .foot-grid{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:24px;}
+  .foot-links{display:flex; gap:20px;}
+  .foot-links a{
+    font-size:13.5px; color:var(--gray); border-bottom:1px solid transparent;
+  }
+  .foot-links a:hover{color:var(--accent); border-color:var(--accent);}
+  .foot-copy{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--gray);}
+
+  @media (max-width:720px){
+    .hero-grid{grid-template-columns:1fr;}
+    .sig-wrap{max-width:220px; margin-top:12px;}
+    .proj-grid{grid-template-columns:1fr;}
+    .nav-links{gap:16px; font-size:13px;}
+  }
+</style>
 </head>
-
 <body>
 
-<header>
-
-<h1>Dai Jinhang</h1>
-
-<p class="subtitle">
-Student · Shenzhen University
-</p>
-
 <nav>
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="projects.html">Projects</a>
-<a href="publications.html">Publications</a>
-<a href="contact.html">Contact</a>
+  <div class="wrap">
+    <a class="nav-name" href="#top">YOUR_NAME /</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#publications">Publications</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
 </nav>
 
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">AI Researcher · Shenzhen University</span>
+      <h1>Your Name</h1>
+      <p class="role">Working on computer vision and vector graphics — turning raster images into structured, editable SVG representations.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#projects">View Projects</a>
+        <a class="btn ghost" href="https://github.com/YOUR_GITHUB" target="_blank">GitHub ↗</a>
+        <a class="btn ghost" href="mailto:you@example.com">Email</a>
+      </div>
+    </div>
+    <!-- signature element: dots (raster) resolving into a traced bezier path (vector) -->
+    <div class="sig-wrap">
+      <svg viewBox="0 0 240 240">
+        <circle class="sig-dot" cx="30" cy="190" r="3"/>
+        <circle class="sig-dot" cx="60" cy="140" r="3"/>
+        <circle class="sig-dot" cx="95" cy="160" r="3"/>
+        <circle class="sig-dot" cx="130" cy="80" r="3"/>
+        <circle class="sig-dot" cx="170" cy="110" r="3"/>
+        <circle class="sig-dot" cx="205" cy="50" r="3"/>
+        <path class="sig-path" d="M30,190 C55,150 65,150 95,160 C120,168 110,95 130,80 C150,65 155,120 170,110 C185,100 190,65 205,50"/>
+      </svg>
+    </div>
+  </div>
 </header>
 
-
-<section>
-
-<h2>Research Interests</h2>
-
-<div class="card">
-
-<p>
-• SVG Generation
-</p>
-
-<p>
-• Vector Graphics
-</p>
-
-<p>
-• Multimodal AI
-</p>
-
-<p>
-• Generative Models
-</p>
-
-</div>
-
-
-<h2>Selected Projects</h2>
-
-
-<div class="project">
-
-<h3>
-Layered Vectorization
-</h3>
-
-<p>
-Research on hierarchical SVG generation and vector graphics.
-</p>
-
-</div>
-
-
-<div class="project">
-
-<h3>
-SVGauge
-</h3>
-
-<p>
-Human-aligned evaluation for SVG generation.
-</p>
-
-</div>
-
-
+<section id="about">
+  <div class="wrap">
+    <div class="kicker">01 · About</div>
+    <h2>About me</h2>
+    <p class="about-text" style="margin-top:14px;">
+      I'm an undergraduate researcher in the Artificial Intelligence program at Shenzhen University.
+      My work sits at the intersection of computer vision and vector graphics — I study how to generate,
+      layer, and evaluate SVGs, with a focus on layered vectorization and perceptual quality metrics.
+      Replace this paragraph with your own bio.
+    </p>
+  </div>
 </section>
 
+<section id="research">
+  <div class="wrap">
+    <div class="kicker">02 · Research Interests</div>
+    <h2>What I work on</h2>
+    <div class="tag-list">
+      <span class="tag">Computer Vision</span>
+      <span class="tag">SVG Generation</span>
+      <span class="tag">Layered Vectorization</span>
+      <span class="tag">SVG Evaluation</span>
+      <span class="tag">Multimodal AI</span>
+    </div>
+  </div>
+</section>
 
-<footer>
+<section id="projects">
+  <div class="wrap">
+    <div class="kicker">03 · Selected Projects</div>
+    <h2>Projects</h2>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <span class="p-tag">SVG Generation</span>
+        <h3>Layered SVG Vectorization</h3>
+        <p>Converting raster images into editable, layered vector graphics.</p>
+        <div class="proj-links">
+          <a href="#" target="_blank">Code</a>
+          <a href="#" target="_blank">Paper</a>
+        </div>
+      </div>
+      <div class="proj-card">
+        <span class="p-tag">Evaluation</span>
+        <h3>Perceptual Metrics for SVGs</h3>
+        <p>Benchmarking vector graphics quality with LPIPS, DINO-based, and contour-based scores.</p>
+        <div class="proj-links">
+          <a href="#" target="_blank">Code</a>
+          <a href="#" target="_blank">Demo</a>
+        </div>
+      </div>
+      <!-- copy a .proj-card block above to add more projects -->
+    </div>
+  </div>
+</section>
 
-<p>
-© 2026 Dai Jinhang
-</p>
+<section id="publications">
+  <div class="wrap">
+    <div class="kicker">04 · Publications</div>
+    <h2>Publications</h2>
+    <div style="margin-top:8px;">
+      <div class="pub">
+        <div class="pub-year">2026</div>
+        <div>
+          <div class="pub-title">Paper title goes here</div>
+          <div class="pub-meta">Authors · Venue · <a href="#" style="border-bottom:1px solid var(--line);">PDF</a></div>
+        </div>
+      </div>
+      <!-- copy a .pub block above to add more publications -->
+    </div>
+  </div>
+</section>
 
+<footer id="contact">
+  <div class="wrap foot-grid">
+    <div>
+      <h2 style="margin-bottom:6px;">Get in touch</h2>
+      <p style="color:var(--gray); font-size:14px;">Open to collaboration, research chats, and questions.</p>
+    </div>
+    <div class="foot-links">
+      <a href="mailto:you@example.com">Email</a>
+      <a href="https://github.com/YOUR_GITHUB" target="_blank">GitHub</a>
+      <a href="#" target="_blank">CV</a>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:32px;">
+    <span class="foot-copy">© 2026 Your Name — built with GitHub Pages</span>
+  </div>
 </footer>
-
 
 </body>
 </html>
