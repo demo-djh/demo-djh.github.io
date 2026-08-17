@@ -4,79 +4,89 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dai Jinhang</title>
+
+<!-- ====== 字体说明 ======
+Claude / Anthropic 官方使用的 Styrene（无衬线）+ Tiempos（衬线）是付费商用字体，网页无法直接引用。
+这里用 Google Fonts 里气质最接近的免费替代：
+  - "Source Serif 4"  → 替代 Tiempos，衬线、克制、有编辑感，用在大标题上
+  - "Inter"           → 替代 Styrene，几何感强的无衬线，用在小字与按钮上
+如果你想换成别的字体，只需要改下面 <link> 里的字体名，以及 CSS 里 --font-serif / --font-sans 两个变量即可。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  :root {
+    --font-serif: 'Source Serif 4', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    --bg: #08080d;
+    --fg: #f2f1ee;
+    --muted: rgba(242, 241, 238, 0.55);
+    --line: rgba(242, 241, 238, 0.18);
+    --accent: #d98e5c; /* 暖橙色点缀，类似 Claude 品牌色，想换颜色改这里 */
+    --mx: 50vw;
+    --my: 50vh;
   }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body {
     width: 100%;
     height: 100%;
-    overflow: hidden; /* 禁止滚动，保持单屏 */
-    background: #0a0a12;
-    font-family: 'Helvetica Neue', Arial, 'Segoe UI', sans-serif;
+    overflow: hidden; /* 单屏不滚动 */
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
   }
 
-  /* ====== 背景动态渐变层 ====== */
+  /* ====== 背景：细网格 + 缓慢流动的渐变光斑 ====== */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.35;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
+  }
+
   .bg-gradient {
     position: fixed;
-    top: -20%;
+    top: -30%;
     left: -20%;
     width: 140%;
-    height: 140%;
-    background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.35), transparent 45%),
-                radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.28), transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.22), transparent 50%);
-    filter: blur(60px);
-    animation: floatBg 16s ease-in-out infinite alternate;
+    height: 160%;
+    background:
+      radial-gradient(circle at 25% 30%, rgba(217, 142, 92, 0.22), transparent 40%),
+      radial-gradient(circle at 78% 65%, rgba(99, 102, 241, 0.20), transparent 42%),
+      radial-gradient(circle at 50% 90%, rgba(45, 212, 191, 0.14), transparent 45%);
+    filter: blur(70px);
+    animation: floatBg 18s ease-in-out infinite alternate;
     z-index: 0;
   }
 
   @keyframes floatBg {
     0%   { transform: translate(0, 0) scale(1); }
-    50%  { transform: translate(3%, -4%) scale(1.08); }
-    100% { transform: translate(-3%, 4%) scale(1.02); }
+    50%  { transform: translate(3%, -4%) scale(1.06); }
+    100% { transform: translate(-3%, 3%) scale(1.02); }
   }
 
-  /* ====== 鼠标跟随光晕，跟随鼠标移动，用 JS 控制 --mx --my ====== */
+  /* 鼠标跟随光晕 */
   .cursor-glow {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 600px;
-    height: 600px;
+    top: 0; left: 0;
+    width: 560px; height: 560px;
     pointer-events: none;
-    background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 70%);
-    transform: translate(calc(var(--mx, 50vw) - 300px), calc(var(--my, 50vh) - 300px));
+    background: radial-gradient(circle, rgba(217, 142, 92, 0.10), transparent 70%);
+    transform: translate(calc(var(--mx) - 280px), calc(var(--my) - 280px));
+    transition: transform 0.15s ease-out;
     z-index: 1;
-    transition: transform 0.12s ease-out;
   }
 
-  /* ====== 星点闪烁背景（可删除这一整块 .stars 相关代码来去掉星星效果） ====== */
-  .stars {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    background-image:
-      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.5), transparent),
-      radial-gradient(1.5px 1.5px at 70% 20%, rgba(255,255,255,0.4), transparent),
-      radial-gradient(1.5px 1.5px at 40% 70%, rgba(255,255,255,0.35), transparent),
-      radial-gradient(2px 2px at 85% 60%, rgba(255,255,255,0.4), transparent),
-      radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.3), transparent),
-      radial-gradient(1.5px 1.5px at 10% 80%, rgba(255,255,255,0.3), transparent);
-    background-repeat: repeat;
-    background-size: 100% 100%;
-    animation: twinkle 4s ease-in-out infinite alternate;
-  }
-
-  @keyframes twinkle {
-    0%   { opacity: 0.5; }
-    100% { opacity: 1; }
-  }
-
-  /* ====== 主内容容器 ====== */
+  /* ====== 主体布局：左右不对称，更有设计感 ====== */
   .container {
     position: relative;
     z-index: 2;
@@ -84,136 +94,216 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 0 20px;
+    padding: 0 8vw;
   }
 
-  /* ====== 大标题 “Hi, I'm Dai Jinhang” —— 如需修改姓名，改这里的文字内容（在 HTML body 里，不是这段 CSS） ====== */
+  /* 顶部小标签，比如 “PORTFOLIO / 2026” 之类，纯装饰，可删可改 */
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+    animation: riseIn 1s ease-out;
+  }
+
+  .kicker::before {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* 大标题 */
   .title {
-    font-size: clamp(2.8rem, 7vw, 6.5rem);
-    font-weight: 700;
-    letter-spacing: 1px;
-    background: linear-gradient(90deg, #ffffff, #a5b4fc, #f0abfc, #ffffff);
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shine 6s linear infinite, riseIn 1s ease-out;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+    animation: riseIn 1s ease-out 0.05s both;
   }
 
-  @keyframes shine {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 300% 50%; }
+  .title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
   }
 
   @keyframes riseIn {
-    0%   { opacity: 0; transform: translateY(30px); }
+    0%   { opacity: 0; transform: translateY(26px); }
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  /* ====== 小字副标题 —— 如需修改文字，去下面 HTML body 中找 .subtitle 标签 ====== */
+  /* 副标题 —— 小字，想改文字内容去下面 HTML body 里改 */
   .subtitle {
-    margin-top: 18px;
-    font-size: clamp(0.95rem, 1.6vw, 1.3rem);
-    color: rgba(255, 255, 255, 0.65);
-    letter-spacing: 0.5px;
-    animation: riseIn 1.2s ease-out;
+    margin-top: 22px;
+    font-family: var(--font-sans);
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    max-width: 42ch;
+    animation: riseIn 1s ease-out 0.15s both;
   }
 
-  /* ====== 按钮区域容器 ====== */
+  /* 按钮区域 */
   .btn-group {
-    margin-top: 46px;
+    margin-top: 48px;
     display: flex;
-    gap: 24px;
-    animation: riseIn 1.4s ease-out;
+    gap: 18px;
+    animation: riseIn 1s ease-out 0.25s both;
   }
 
-  /* ====== 按钮通用样式 —— 想改按钮颜色/大小/圆角，在这里改 ====== */
+  /* ====== 按钮样式：这一块决定按钮的外观，想改颜色/圆角/边框在这里改 ====== */
   .btn {
     position: relative;
-    padding: 14px 34px;
-    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
     font-weight: 500;
-    color: #fff;
+    letter-spacing: 0.01em;
+    color: var(--fg);
     text-decoration: none;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: 2px; /* 想要更圆的按钮，把这里改成 999px */
     overflow: hidden;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
     cursor: pointer;
   }
 
-  /* 鼠标悬停按钮时的动效，可调整位移/发光强度 */
+  /* 按钮里的小箭头，纯装饰，不想要可以删掉 span.arrow 以及下面这段 */
+  .btn .arrow {
+    transition: transform 0.25s ease;
+  }
+
   .btn:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 30px rgba(165, 180, 252, 0.35);
+    border-color: var(--accent);
+    transform: translateY(-3px);
   }
 
-  /* 按钮内部的流光扫过效果 */
-  .btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -75%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.6s ease;
+  .btn:hover .arrow {
+    transform: translate(3px, -3px);
   }
 
-  .btn:hover::before {
-    left: 125%;
-  }
-
-  /* 主按钮（例如 Google Scholar）可单独换个强调色，改这里的 background/border */
+  /* 主按钮（Google Scholar）——想单独换强调色改这里的 background */
   .btn.primary {
-    background: linear-gradient(90deg, rgba(99,102,241,0.35), rgba(236,72,153,0.3));
-    border-color: rgba(255, 255, 255, 0.35);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0a0a0a;
+  }
+
+  .btn.primary:hover {
+    background: #e8a877;
+    border-color: #e8a877;
+  }
+
+  /* 次按钮（CV） */
+  .btn.ghost {
+    background: transparent;
+  }
+
+  .btn.ghost:hover {
+    background: rgba(242, 241, 238, 0.05);
+  }
+
+  /* 右下角坐标式小装饰文字，纯设计感元素，可删除整个 .coords 块 */
+  .coords {
+    position: fixed;
+    bottom: 28px;
+    right: 8vw;
+    z-index: 2;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    animation: riseIn 1.2s ease-out 0.35s both;
+  }
+
+  /* 左下角同款小装饰，可删除 */
+  .footer-note {
+    position: fixed;
+    bottom: 28px;
+    left: 8vw;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    animation: riseIn 1.2s ease-out 0.35s both;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
   }
 
 </style>
 </head>
 <body>
 
-  <!-- 背景装饰层，不需要改动 -->
+  <div class="grid-bg"></div>
   <div class="bg-gradient"></div>
-  <div class="stars"></div>
   <div class="cursor-glow"></div>
 
-  <!-- ====== 主内容区域 ====== -->
   <div class="container">
 
-    <!-- 大标题：想改名字，直接改下面双引号里的英文文字 -->
-    <h1 class="title">Hi, I'm Dai Jinhang</h1>
+    <!-- 顶部小标签，可改文字或删除整个 div -->
+    <div class="kicker">Portfolio &middot; 2026</div>
 
-    <!-- 副标题小字：想改文字，直接改下面这一行 -->
+    <!-- 大标题：想改名字，改双引号内文字。<em>...</em> 包裹的部分会显示为强调色斜体 -->
+    <h1 class="title">Hi, I'm <em>Dai Jinhang</em></h1>
+
+    <!-- 副标题小字，想改文字直接改这一行 -->
     <p class="subtitle">2026 &middot; M.S. in Artificial Intelligence, Shenzhen University</p>
 
-    <!-- ====== 按钮区：跳转链接在 href="..." 里改，按钮文字在 <a> 标签中间改 ====== -->
+    <!-- ====== 按钮区：href 换成你的真实链接，文字在 <a> 标签中间改 ====== -->
     <div class="btn-group">
 
-      <!-- 按钮1：Google Scholar —— 把 href 换成你自己的 Google Scholar 主页链接 -->
-      <a class="btn primary" href="https://scholar.google.com/citations?user=你的ID" target="_blank" rel="noopener noreferrer">
-        Google Scholar
+      <!-- 按钮1：Google Scholar —— 换成你自己的主页链接 -->
+      <a class="btn primary" href="https://scholar.google.com/citations?user=35IWqc8AAAAJ&hl=zh-CN" target="_blank" rel="noopener noreferrer">
+        Google Scholar <span class="arrow">&#8599;</span>
       </a>
 
-      <!-- 按钮2：CV —— 把 href 换成你的简历文件链接（可以是网盘链接，或仓库里 CV.pdf 的路径） -->
-      <a class="btn" href="CV.pdf" target="_blank" rel="noopener noreferrer">
-        CV
+      <!-- 按钮2：CV —— 换成你的简历文件路径或网盘链接 -->
+      <a class="btn ghost" href="CV.pdf" target="_blank" rel="noopener noreferrer">
+        CV <span class="arrow">&#8599;</span>
       </a>
 
     </div>
 
   </div>
 
+  <!-- 左下角小状态标，纯装饰，可删除 -->
+  <div class="footer-note">
+    <span class="dot"></span>
+    Shenzhen, China
+  </div>
+
+  <!-- 右下角小坐标标，纯装饰，可删除 -->
+  <div class="coords">22.5431&deg; N / 114.0579&deg; E</div>
+
 <script>
-  // 鼠标移动时更新光晕位置（对应 CSS 里的 .cursor-glow）
   document.addEventListener('mousemove', function (e) {
     document.documentElement.style.setProperty('--mx', e.clientX + 'px');
     document.documentElement.style.setProperty('--my', e.clientY + 'px');
