@@ -51,6 +51,90 @@ Claude / Anthropic 官方使用的 Styrene（无衬线）+ Tiempos（衬线）�
     background-size: 64px 64px;
     opacity: 0.35;
     mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
+    animation: gridDrift 24s linear infinite; /* 网格缓慢平移，制造流动感 */
+  }
+
+  @keyframes gridDrift {
+    0%   { background-position: 0 0, 0 0; }
+    100% { background-position: 64px 64px, 64px 64px; }
+  }
+
+  /* ====== 缓慢旋转的锥形光晕，叠加在网格上方，增加背景层次 ====== */
+  .conic-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 120vmax;
+    height: 120vmax;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(217, 142, 92, 0.05) 60deg,
+      transparent 140deg,
+      rgba(99, 102, 241, 0.05) 220deg,
+      transparent 300deg,
+      transparent 360deg
+    );
+    animation: rotateSlow 40s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  @keyframes rotateSlow {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* ====== 漂浮光点粒子层，由 JS 生成若干个 .particle ====== */
+  .particles {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    bottom: -10px;
+    width: var(--size, 3px);
+    height: var(--size, 3px);
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0;
+    animation: floatUp linear infinite;
+    animation-delay: var(--delay, 0s);
+    animation-duration: var(--duration, 14s);
+    left: var(--left, 50%);
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: var(--opacity, 0.5); }
+    90%  { opacity: var(--opacity, 0.5); }
+    100% { transform: translateY(-105vh) translateX(var(--drift, 20px)); opacity: 0; }
+  }
+
+  /* ====== 一条缓慢扫过整屏的斜向光带，制造扫描/呼吸的科技感 ====== */
+  .sweep {
+    position: fixed;
+    inset: -20% -20%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 40%,
+      rgba(242, 241, 238, 0.035) 50%,
+      transparent 60%
+    );
+    animation: sweepMove 9s ease-in-out infinite;
+  }
+
+  @keyframes sweepMove {
+    0%   { transform: translateX(-30%); }
+    50%  { transform: translateX(30%); }
+    100% { transform: translateX(-30%); }
   }
 
   .bg-gradient {
@@ -264,6 +348,9 @@ Claude / Anthropic 官方使用的 Styrene（无衬线）+ Tiempos（衬线）�
 
   <div class="grid-bg"></div>
   <div class="bg-gradient"></div>
+  <div class="conic-glow"></div>
+  <div class="sweep"></div>
+  <div class="particles" id="particles"></div> <!-- 漂浮光点由下方 JS 自动生成，数量可在 script 里改 -->
   <div class="cursor-glow"></div>
 
   <div class="container">
@@ -281,7 +368,7 @@ Claude / Anthropic 官方使用的 Styrene（无衬线）+ Tiempos（衬线）�
     <div class="btn-group">
 
       <!-- 按钮1：Google Scholar —— 换成你自己的主页链接 -->
-      <a class="btn primary" href="https://scholar.google.com/citations?user=35IWqc8AAAAJ&hl=zh-CN" target="_blank" rel="noopener noreferrer">
+      <a class="btn primary" href="https://scholar.google.com/citations?user=你的ID" target="_blank" rel="noopener noreferrer">
         Google Scholar <span class="arrow">&#8599;</span>
       </a>
 
@@ -297,14 +384,27 @@ Claude / Anthropic 官方使用的 Styrene（无衬线）+ Tiempos（衬线）�
   <!-- 左下角小状态标，纯装饰，可删除 -->
   <div class="footer-note">
     <span class="dot"></span>
-    📮daijh523 at gmail dot com
+    📮 daijh523 at gmail dot com
   </div>
 
-<script>
-  document.addEventListener('mousemove', function (e) {
-    document.documentElement.style.setProperty('--mx', e.clientX + 'px');
-    document.documentElement.style.setProperty('--my', e.clientY + 'px');
-  });
+  
+
+  // ====== 生成漂浮光点粒子 ======
+  // PARTICLE_COUNT 控制粒子数量，想要更热闹/更安静，改这个数字即可
+  const PARTICLE_COUNT = 26;
+  const particleContainer = document.getElementById('particles');
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.setProperty('--left', Math.random() * 100 + '%');
+    p.style.setProperty('--size', (Math.random() * 2.5 + 1.5) + 'px');
+    p.style.setProperty('--duration', (Math.random() * 12 + 12) + 's'); // 12~24 秒漂浮一次
+    p.style.setProperty('--delay', (Math.random() * -24) + 's'); // 负延迟让粒子一开始就分散在各个位置
+    p.style.setProperty('--opacity', (Math.random() * 0.4 + 0.15).toFixed(2));
+    p.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px'); // 上升过程中的左右漂移幅度
+    particleContainer.appendChild(p);
+  }
 </script>
 
 </body>
