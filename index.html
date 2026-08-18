@@ -6,7 +6,11 @@
 <title>Dai Jinhang</title>
 
 <!-- ====== 字体说明 ======
-只需要改下面 <link> 里的字体名，以及 CSS 里 --font-serif / --font-sans 两个变量即可。
+Claude / Anthropic 官方使用的 Styrene（无衬线）+ Tiempos（衬线）是付费商用字体，网页无法直接引用。
+这里用 Google Fonts 里气质最接近的免费替代：
+  - "Source Serif 4"  → 替代 Tiempos，衬线、克制、有编辑感，用在大标题上
+  - "Inter"           → 替代 Styrene，几何感强的无衬线，用在小字与按钮上
+如果你想换成别的字体，只需要改下面 <link> 里的字体名，以及 CSS 里 --font-serif / --font-sans 两个变量即可。
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -287,9 +291,11 @@
     border-color: #e8a877;
   }
 
-  /* 次按钮（CV） */
+  /* 次按钮（Google Scholar / Github），尺寸稍小，跟随主按钮排列 */
   .btn.ghost {
     background: transparent;
+    padding: 10px 22px;
+    font-size: 0.85rem;
   }
 
   .btn.ghost:hover {
@@ -352,7 +358,7 @@
   <div class="container">
 
     <!-- 顶部小标签，可改文字或删除整个 div -->
-    <div class="kicker">Welcome to my homepage</div>
+    <div class="kicker">Portfolio &middot; 2026</div>
 
     <!-- 大标题：想改名字，改双引号内文字。<em>...</em> 包裹的部分会显示为强调色斜体 -->
     <h1 class="title">Hi, I'm <em>Dai Jinhang</em></h1>
@@ -363,14 +369,19 @@
     <!-- ====== 按钮区：href 换成你的真实链接，文字在 <a> 标签中间改 ====== -->
     <div class="btn-group">
 
-      <!-- 按钮1：Google Scholar —— 换成你自己的主页链接 -->
-      <a class="btn primary" href="https://scholar.google.com/citations?user=你的ID" target="_blank" rel="noopener noreferrer">
+      <!-- 主按钮：KnowledgeBase —— 换成你自己的知识库链接 -->
+      <a class="btn primary" href="https://demo-djh.github.io/knowledge-base" target="_blank" rel="noopener noreferrer">
+        KnowledgeBase <span class="arrow">&#8599;</span>
+      </a>
+
+      <!-- 次按钮1：Google Scholar —— 换成你自己的主页链接 -->
+      <a class="btn ghost" href="https://scholar.google.com/citations?user=35IWqc8AAAAJ" target="_blank" rel="noopener noreferrer">
         Google Scholar <span class="arrow">&#8599;</span>
       </a>
 
-      <!-- 按钮2：CV —— 换成你的简历文件路径或网盘链接 -->
-      <a class="btn ghost" href="CV.pdf" target="_blank" rel="noopener noreferrer">
-        CV <span class="arrow">&#8599;</span>
+      <!-- 次按钮2：Github —— 换成你自己的 Github 主页链接 -->
+      <a class="btn ghost" href="https://demo-djh.github.io" target="_blank" rel="noopener noreferrer">
+        Github <span class="arrow">&#8599;</span>
       </a>
 
     </div>
@@ -380,10 +391,16 @@
   <!-- 左下角小状态标，纯装饰，可删除 -->
   <div class="footer-note">
     <span class="dot"></span>
-    📮 daijh523 at gmail dot com
+    📫 daijh523 at gmail dot com
   </div>
 
-  
+ 
+
+<script>
+  document.addEventListener('mousemove', function (e) {
+    document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+    document.documentElement.style.setProperty('--my', e.clientY + 'px');
+  });
 
   // ====== 生成漂浮光点粒子 ======
   // PARTICLE_COUNT 控制粒子数量，想要更热闹/更安静，改这个数字即可
